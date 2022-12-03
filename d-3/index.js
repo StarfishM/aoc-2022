@@ -2,7 +2,7 @@
 // find exact characters that exist in both arrays -> those are the mistakes
 // find priority number -> maybe generate a dictionary for this
 // calculate sum of priorities
-const { testData, data } = require("./input");
+const { testData, data, testDataP2, dataP2 } = require("./input");
 // console.log("testData: ", testData);
 
 const errorItems = [];
@@ -24,8 +24,19 @@ for (let prop in priorityDict) {
 let prioritySum = 0;
 
 errorItems.forEach((item) => (prioritySum += priorityDict[item]));
-console.log("Part 1:prioritySum: ", prioritySum);
+console.log("Part 1 prioritySum: ", prioritySum);
 
 ///////////////////////
 ////////PART 2////////
 /////////////////////
+// go through every group of three, find intersections between the three to find the badge letters
+// add them to an array do the sum math from before via the dict
+const badgeLetters = [];
+for (let i = 0; i < dataP2.length; i += 3) {
+    let inter = intersection(dataP2[i], dataP2[i + 1]);
+    inter = intersection(inter, dataP2[i + 2]);
+    badgeLetters.push(inter[0]);
+}
+let prioritySumP2 = 0;
+badgeLetters.forEach((item) => (prioritySumP2 += priorityDict[item]));
+console.log("Part 2 prioritySumP2: ", prioritySumP2);
