@@ -22,3 +22,24 @@ data.forEach((pairOfInstruction) => {
 });
 
 console.log(fullyContainedPairs);
+
+///////////////////////////////////
+/////////// Part 2 ///////////////
+/////////////////////////////////
+
+// find anything that overlaps
+// 2 - 4
+// 3 - 6
+let overlapCount = 0;
+data.forEach((pairOfIns) => {
+    if (pairOfIns.f.e >= pairOfIns.s.s && pairOfIns.f.e <= pairOfIns.s.e) {
+        overlapCount++;
+    } else if (
+        pairOfIns.s.e >= pairOfIns.f.s &&
+        pairOfIns.s.e <= pairOfIns.f.e
+    ) {
+        overlapCount++;
+    }
+});
+
+console.log("ovlerlapCount: ", overlapCount);
