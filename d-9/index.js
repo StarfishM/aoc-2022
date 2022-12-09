@@ -1,3 +1,6 @@
+//////////////////////////////
+////////// PART 1 ///////////
+////////////////////////////
 // Tail always stays in proximity of H
 // IF H is two steps up, down, left or right from T, T has to move
 // in that direction, so it remains close
@@ -11,10 +14,7 @@
 // H&T start at the same position -> H makes the motions, T follows suit
 // based on the rules above
 const rope = {};
-const { testInput, input } = require("./input");
-// console.log("testInput: ", Array.isArray(testInput));
-// console.log("input[0]: ", Array.isArray(input));
-// console.log("input: ", input.slice(0, 5));
+const { testInput, input, testInputP2 } = require("./input");
 const executeMoveInstructions = (directionsArr, x = 0, y = 0) => {
     let tPos = { x, y };
     let hPos = { x, y };
@@ -26,11 +26,6 @@ const executeMoveInstructions = (directionsArr, x = 0, y = 0) => {
             hPos = takeStep(direction, hPos);
             tPos = figureOutTmove(hPos, tPos);
             rope[`${tPos.x},${tPos.y}`] = 0;
-            // console.log("------------");
-            // console.log("hPos", hPos);
-            // console.log("tPos", tPos);
-            // console.log("------------");
-
             stepsTaken++;
         }
     });
@@ -94,7 +89,6 @@ const figureOutTmove = (positionHead, positionTail) => {
             }
         } else if (headIsUp && !headIsRight) {
             // potentially move up diagonally to the left
-            // const distanceY = tailY - headY;
             const distanceX = tailX - headX;
             const distanceY = headY - tailY;
             if (distanceX > 1 || distanceY > 1) {
@@ -121,10 +115,42 @@ const figureOutTmove = (positionHead, positionTail) => {
             }
         }
     }
-    // console.log("positionTail after if else ", positionTail);
     return positionTail;
 };
 
 executeMoveInstructions(testInput);
 // executeMoveInstructions(input);
 console.log("Part 1:", Object.keys(rope).length);
+
+//////////////////////////////
+////////// PART 2 ///////////
+////////////////////////////
+//keep an array of 9 position elements to know where each knot is at what time
+// move head -> update all other parts accordingly, -> head is at index 0, tail is at last index, other elements move depending on their position in the array, i.e. the first after head moves as the tail did before
+const rope2 = {};
+const executeMoveInstructionsP2 = (directionsArr, x = 0, y = 0) => {
+    let positions = [];
+    for (let i = 0; i < 10; i++) {
+        positions.push({ x, y });
+    }
+    directionsArr.forEach((dirs) => {
+        [direction, steps] = dirs;
+        let stepsTaken = 0;
+        while (stepsTaken < steps) {
+            // do step function
+            positions[0] = takeStep(direction, positions[0]);
+            positions.reduce((prev, curr, idx) => {
+                let currPos = figureOutTmove(prev, curr);
+                return currPos;
+            });
+            rope2[
+                `${positions[positions.length - 1].x},${
+                    positions[positions.length - 1].y
+                }`
+            ] = 0;
+            stepsTaken++;
+        }
+    });
+};
+executeMoveInstructionsP2(input);
+console.log("Part 2: ", Object.keys(rope2).length);
